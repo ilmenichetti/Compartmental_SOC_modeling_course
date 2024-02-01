@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>History of SOC models</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Crash course in compartmental modeling</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="history.html">History of SOC models</a>
+</li>
+<li>
+  <a href="ICBM.html">The ICBM (toy?) model</a>
+</li>
+<li>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
+  <a href="calibration.html">Model calibration</a>
+</li>
+<li>
+  <a href="space.html">Model space and equifinality</a>
+</li>
+<li>
+  <a href="bayes.html">Bayes</a>
+</li>
+<li>
+  <a href="workshop1.html">Workshop 1: write and calibrate a simple SOC model</a>
+</li>
+<li>
+  <a href="workshop2.html">Workshop 2: explore the ICBM model space</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">History of SOC models</h1>
+
+</div>
+
+
+<p><br />
+<br />
+</p>
+<div id="history-of-soc-science" class="section level1">
+<h1>History of SOC science</h1>
+<p>It is impossible to date when the idea of SOC, or something similar,
+was firsty devised, but here an extract from the <strong>Kitab
+Al-Filaha</strong>, a manual of agronomy written around the end of the
+10th century by Ibn al-Awwam, a Muslim Spanish-Arab agriculturist,
+probably the most complete treatise written on the subject of
+agriculture and agronomy in medieval times.</p>
+<p><em>CHAPTER II.</em> <em>Of manure and its species; of their
+usefulness, preparation, and how to use them and apply them. Refer to
+the trees and vegetables, if they suffer, or not, the manure; all taken
+from the book of Ebn-Hajáj, in which under the name of sirjin he deals
+with manure</em></p>
+<p><em>Manure, says Junio, makes the good land of better quality, while
+the bad land is greatly benefited and strengthened.</em>.</p>
+<p><img src="figures/kitab_al_filaha.png" style="height:50.0%" /></p>
+<p><br />
+<br />
+</p>
+<div id="soil-organic-matter-gets-scientific" class="section level2">
+<h2>Soil organic matter gets scientific</h2>
+<p>Later on, SOC starts to become object of sistematization, as in the
+following extract from 1804:</p>
+<p><img src="figures/Saussure.png" style="height:50.0%" /></p>
+<p>Some systematic observations about SOM:</p>
+<ol style="list-style-type: decimal">
+<li>since no continuous accumulation of SOM occurs even with continuous
+organic inputs, some of these inputs must be destroyed,</li>
+<li>the amount which is destroyed must, to a certain extent, be
+proportional to the absolute existing amount,</li>
+<li>limits to SOM accretion must vary depending on climate, nature of
+mother bedrock, vegetation, cropping system and fertility of the
+land,</li>
+<li>even if all conditions are favorable to SOM accumulation, there must
+be a maximum for the thickness of the humus layer beyond which
+destructive causes equal productive ones.<br />
+<br />
+</li>
+</ol>
+</div>
+<div id="soil-organic-matter-gets-attention-1938"
+class="section level2">
+<h2>Soil organic matter gets attention (1938)</h2>
+<p>A more structured approach to understand its nature initiated during
+past century:</p>
+<p><img src="figures/waksman_1938.png" style="width:70.0%" /></p>
+<p><em>Waksman, S.A., 1938. Humus. Origin, Chemical Composition and
+Importance in Nature, second ed. revised. Williams and Wilkins,
+Baltimore, p. 526</em></p>
+<p>But this is still an attempt to investigate its nature, not its
+dynamics.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="the-beginning-of-the-conventional-soc-decay-theory-1945"
+class="section level2">
+<h2>The Beginning of the conventional SOC decay theory (1945)</h2>
+<p>Hénin and Dupuis are probably the first to conceptualize a SOC (<span
+class="math inline">\(C_s\)</span>) decay model describing SOC dynamics,
+or its evolution over time, as a function of its inputs (<span
+class="math inline">\(C_i\)</span>) and decay rate (<span
+class="math inline">\(k\)</span>): <span class="math display">\[
+\frac{dC_s}{dt} = h \cdot C_i - k \cdot C_s
+\]</span> In their formulation, the inputs to the SOC are defined by the
+C inputs <span class="math inline">\(C_i\)</span> times a humification
+constant <span class="math inline">\(h\)</span>.</p>
+<p><img src="history_files/figure-html/unnamed-chunk-1-1.png" width="528" /><br />
+<br />
+</p>
+</div>
+<div id="the-beginning-of-the-conventional-soc-decay-theory-1963"
+class="section level2">
+<h2>The Beginning of the conventional SOC decay theory (1963)</h2>
+<div class="columns-2">
+<div class="centered">
+<img src="figures/Olson.jpg" style="width:50.0%" />
+</div>
+<p>Jerry Olson stated in the incipit of his SOC modeling paper: <em>“The
+net rate of change in energy or material stored in an ecological system
+or its parts equals the <strong>rate of income</strong> minus the
+<strong>rate of loss</strong>.”</em></p>
+<p><img src="history_files/figure-html/unnamed-chunk-2-1.png" width="240" /></p>
+<p>And described it mathematically with a linear differential equation
+very similar to Hénin and Dupuis model: <span class="math display">\[
+\frac{dC_s}{dt} = I - k \cdot C_s
+\]</span> Compared to Hénin and Dupuis, the term <span
+class="math inline">\(I\)</span> substitutes <span
+class="math inline">\(h \cdot C_i\)</span>, but since <span
+class="math inline">\(h\)</span> is anyway a latent variable the two
+models are virtually the same. <strong>Such equation is still the basis
+for most SOC models available around.</strong></p>
+</div>
+<p><br />
+<br />
+</p>
+</div>
+<div id="differences-between-olson-and-hénin-dupuis"
+class="section level2">
+<h2>Differences between Olson and Hénin &amp; Dupuis</h2>
+<p>While Olson’s model is actually a single pool model, Hénin &amp;
+Dupuis define the input flux to the soil as a fraction of the total C
+input <span class="math inline">\(C_i\)</span>, which can describe the
+litter. When considering the implicit fluxes from the system
+(respiration), in order to close the mass balance, we need to account
+also for the respiration from the litter:</p>
+<p><img src="history_files/figure-html/unnamed-chunk-3-1.png" width="336" /></p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="many-many-many-many-soc-models" class="section level2">
+<h2>Many many many many SOC models</h2>
+<p>A <strong>(badly incomplete)</strong> list of the major (only linear
+ones, we’ll come to this later) SOC models over time:</p>
+<p><img src="history_files/figure-html/unnamed-chunk-4-1.png" width="1008" /></p>
+<p>A relatively recent literature review (Campbell and Paustian 2015)
+found <strong>87</strong> different SOM models (and this not considering
+broader models, like complete ecosystem models, and more speculative
+studies on SOM model structures)</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="the-golden-era-rothc-1977" class="section level2">
+<h2>The Golden Era: RothC (1977)</h2>
+<p>When computer power started to be reasonably available, more complex
+models trying to represent SOC in more detail arised. In the decades
+between the late 70s and late 90s the foundations of most currently used
+SOC models were laid. <img src="figures/rothc.jpg" height="300" /></p>
+</div>
+<div id="the-golden-era-century-1987" class="section level2">
+<h2>The Golden Era: Century (1987)</h2>
+<div class="centered">
+<img src="figures/century.jpg" style="width:65.0%" />
+</div>
+<p>These models rely mathematically on the same principle enunciated by
+Hénin and Dupuis or Olson, but involve more pools. These pools are used
+to represent various hypotheses to modify the initial first-order
+kinetic assumption, ultimately to represent better the data available
+for calibrating the model. And none of them is really right or wrong, or
+better in absolute terms.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="the-problem-of-model-initialization" class="section level2">
+<h2>The problem of model initialization</h2>
+<div style="background-color:lightgrey; padding:10px;">
+<p>
+Jargon: “steady state” means that the system is in equilibrium so the
+variation of the C stocks is zero: C in the soil stays constant.
+</p>
+</div>
+<p>“Model initialization” means to specify the initial state of the
+system, at time zero (which means at the beginning of our simulation)..
+For multi-compartment models, this requires determining the initial size
+of each pool.<br />
+There are multiple ways to realize this, but <strong>the information
+problem is always the same: we need to infer the pool distributions by
+assuming a long past history in each site, in order to know all C inputs
+to the soil before the start of our simulation (or, if not all, long in
+the past)</strong>. We can assume steady state at the beginning and
+therefore constant inputs (averaging the data we have and assuming that
+before inputs were more or less those), or we can assume variable inputs
+repeating the data we have for the present assuming that the same
+rotations were used in the past, but the problem is in any case usually
+that we do not know much about past inputs and we need to be ready to
+make strong assumptions.<br />
+Methods are in general:</p>
+<ul>
+<li>Solved steady state: an analytical solution is fed with the average
+C inputs, assumed constant, to determine pool distribution and SOC
+stocks</li>
+<li>Spin-up runs: as above, but instead of analytically solving the
+model we run it for very long time. we can eityher use average inputs,
+assumed constant, repeated for every time step, or in this case also
+variable inputs. IN this case it is a quasi-steady state, because until
+the inputs are variable we will never have a real steady state.</li>
+</ul>
+<p>These methods are essentially details about a specific
+implementation, but no one solves the information problem above. They
+might be better suited to your specific case and the assumptions you are
+ready to make.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div
+id="the-dream-of-data-based-initialization-soil-organic-matter-quality"
+class="section level2">
+<h2>The dream of “data-based” initialization: soil organic matter
+“quality”</h2>
+<p>The pools of compartmental models represent different “qualities” of
+SOC molecules. This made sense when we believed that chemistry alone was
+governing their turnover, for example light fractions were supposed to
+be more labile and heavy fractions more recalcitrant. But we now know
+that turnover is an interaction of chemical, edaphical and biological
+factors. SOC “quality” is a continuous spectrum, and such spectrum is
+also highly nonlinear because many processes influences it. For example,
+we can have at some point a switch, like a critical moisture, that turns
+off one protection mechanism.<br />
+Pools could have been something representing (as an approximation) a
+physical reality if this continuum was linear, but on a highly nonlinear
+continuum this assumption shows even more problems. <strong>In other
+words, it is very difficult to know exactly to which kind of molecules a
+certain pool corresponds.</strong></p>
+<p><img src="figures/quality.jpg" height="450" /></p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="the-dream-of-data-based-initialization-yasso-zimmerman-etc"
+class="section level2">
+<h2>The dream of “data-based” initialization: Yasso, Zimmerman,
+etc…</h2>
+<p>Many models have developed around the idea of having measurable
+pools, or such idea developed afterwards with specific fractionation
+techniques. <img src="figures/zimmerman.jpg" height="300" /> But any
+fractionation will be based on an assumed conceptual model defining
+recalcitrance, simplifying a lot the quality function and imposing
+assumptions already on the data.<br />
+It kind of works, kind of doesn’t.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="one-possible-tree-of-soc-models-concepts"
+class="section level2">
+<h2>One possible tree of SOC models concepts</h2>
+<p><img src="history_files/figure-html/unnamed-chunk-5-1.png" width="528" /></p>
+</div>
+<div id="are-we-breaking-soc-paradigm" class="section level2">
+<h2>Are we “breaking” SOC paradigm?</h2>
+<p>Organic matter has been studied for centuries through different
+“phases”: from natural observation (“humus”, pre-1840) to chemical
+concepts (“humic substances” and fraction, 1840-1940s) to mosre recent
+ecological concepts (1940-), recognizing more and more the complex
+relationships between SOM and environment. Some see it as
+<strong>paradigm shift</strong>, some see it as
+<strong>evolution</strong>.</p>
+<p><img src="history_files/figure-html/unnamed-chunk-6-1.png" width="1008" /></p>
+</div>
+<div id="representing-reality-the-view-of-experimentalists"
+class="section level2">
+<h2>Representing reality: the view of experimentalists</h2>
+<p><img src="figures/Schimel.jpg" style="width:70.0%" /> <em>Schimel,
+Joshua. “Modeling Ecosystem-Scale Carbon Dynamics in Soil: The Microbial
+Dimension.” Soil Biology and Biochemistry 178 (March 2023)</em></p>
+</div>
+<div id="representing-reality-the-view-of-experimentalists-1"
+class="section level2">
+<h2>Representing reality: the view of experimentalists</h2>
+<p>We know that SOC decomposition is process mediated by microbes, their
+growth and by their exoenzymes production, so representing these
+processes will produce more accurate models.</p>
+<p><img src="figures/Schimel2.jpg" style="width:55.0%" /> <em>Schimel,
+Joshua. “Modeling Ecosystem-Scale Carbon Dynamics in Soil: The Microbial
+Dimension.” Soil Biology and Biochemistry 178 (March 2023)</em></p>
+</div>
+<div id="the-cyclical-discussion-is-more-realistic-more-better"
+class="section level2">
+<h2>The cyclical discussion: is more realistic more better?</h2>
+<p>Making decomposition controlled by enzymes/microbes means making the
+model nonlinear, moving from ordinary differential equations to partial
+differential equations.</p>
+<p><img src="figures/SOC.png" style="width:60.0%" /></p>
+<p>Nonlinearities in models can lead to weird behaviors, for example
+oscillations. Because of the nonlinear (more than linear) effects, any
+mistake can have an amplificated effect on predictions.</p>
+</div>
+<div
+id="more-complicated-nonlinear-models-bring-extrapolation-uncertainty"
+class="section level2">
+<h2>More complicated (nonlinear) models bring extrapolation
+uncertainty</h2>
+<p><img src="figures/Zheng_et_al.png" style="width:60.0%" /> Shi,
+Zheng, Sean Crowell, Yiqi Luo, and Berrien Moore. “Model Structures
+Amplify Uncertainty in Predicted Soil Carbon Responses to Climate
+Change.” Nature Communications 9, no. 1 (June 4, 2018)</p>
+</div>
+<div id="scary-linear-algebra-for-linear-models" class="section level2">
+<h2>Scary: linear algebra for linear models</h2>
+<p>Compartmental models can be expressed within a generic linear algebra
+(matrix) notation <span class="math display">\[
+\frac{dC_{(t)}}{dt}=I_{(t)} + A_{(t)} \cdot C_{(t)}
+\]</span> For example the ICBM model (assuming constant average inputs),
+written explicitly, is: <span class="math display">\[
+\frac{dC_{(t)}}{dt}=\begin{bmatrix} I\\  0\\  \end{bmatrix} +
+  \xi \cdot
+    \begin{bmatrix} -k_y &amp; \epsilon \\ 0 &amp; -k_o  \end{bmatrix}
+\cdot
+    \begin{bmatrix} Y \\ O \end{bmatrix}
+\]</span> This notation allows us to generalize the main differences
+between model structures:</p>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="42%" />
+<col width="46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Autonomous</th>
+<th align="left">Non-autonomous</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Linear</td>
+<td align="left"><span class="math inline">\(I+\xi \cdot A \cdot
+C_{(t)}\)</span></td>
+<td align="left"><span class="math inline">\(I+\xi_{(t)} \cdot A \cdot
+C_{(t)}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Non-linear</td>
+<td align="left"><span class="math inline">\(I+\xi \cdot A (C_{(t)})
+\cdot C_{(t)}\)</span></td>
+<td align="left"><span class="math inline">\(I+\xi (t) \cdot A (C_{(t)})
+\cdot C_{(t)}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>(it brings also the pretty neat advantage of an easy nalytical steady
+state for anything linear…)</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

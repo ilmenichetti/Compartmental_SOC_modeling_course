@@ -1,0 +1,25 @@
+name: "SOC_modeling_course"
+navbar:
+  title: "Crash course in compartmental modeling"
+  left:
+    - text: "Introduction"
+      href: index.html
+    - text: "History of SOC models"
+      href: history.html
+    - text: "The ICBM (toy?) model"
+      href: ICBM.html
+    - text: "The steady state concept"
+      href: steadystate.html
+    - text: "Model calibration"
+      href: calibration.html
+    - text: "Model space and equifinality"
+      href: space.html
+    - text: "Bayes"
+      href: bayes.html
+
+
+    - text: "Workshop 1: write and calibrate a simple SOC model"
+      href: workshop1.html
+
+    - text: "Workshop 2: explore the ICBM model space"
+      href: workshop2.html

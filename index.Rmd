@@ -1,0 +1,38 @@
+---
+title: "Compartmental SOC models"
+---
+
+# Introducing the course
+
+# Learning outcomes
+ 
+ * Be able to distinguish SOC models based on the main concepts applied
+ * Be able to define a simple SOC model as ODE system
+ * Be familiar with ICBM, one of the simplest SOC model available (yet quite powerful)
+ * Be able to calibrate a simple model
+ * Be able to explore fully the model space of ICBM
+ * Understand the concept of Bayesian calibration
+
+# Course structure
+
+# Representing reality?
+
+<div class="columns-2">
+  <div class="centered">
+  ![](./figures/me.jpg){height=350}
+  316 kB, Reality
+  </div>
+
+<div class="centered">
+  ![](./figures/me_model.jpg){height=350}
+  11 kB, a model
+  </div>
+</div>
+
+
+# Defining compartmental SOC models
+
+
+# Main categories of compartmental SOC models
+First of all, do not worry if this does not appear clear yet. It should become clearer while the course progresses.  
+But I want to keep in mind the following scheme, and use it to cathegorize the models you will find.
