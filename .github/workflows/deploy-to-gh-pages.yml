@@ -1,5 +1,13 @@
-name: Deploy to GitHub Pages
+  run: |
+    git config --global user.name 'GitHub Actions'
+    git config --global user.email 'actions@github.com'
+    git subtree split --prefix _site -b gh-pages
+    git push -f https://${{ secrets.GITHUB_TOKEN }}@github.com/ilmenichetti/Compartmental_SOC_modeling_course.git gh-pages:gh-pages
+    git branch -D gh-pages
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    
 on:
   push:
     branches:
