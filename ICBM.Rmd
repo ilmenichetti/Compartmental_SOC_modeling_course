@@ -180,7 +180,6 @@ For example, what if you wanted to modify the model adding one specific Y pool f
     
 ```
 
-## What if?
 You can then just define the model as an ODE system:
 $$
 \frac{dY_{r,}}{dt}= I_r - k_y \cdot r \cdot Y \\
@@ -192,6 +191,5 @@ $$
 $$
 And now we are ready to write this system into the solver, and then we have our model.
 
-## What if?
 This is just an example. We assumed, among many other things, that the two `Y` pools decay at the same constant rate `k_y`, but this is not necessarily the case, it all depends on the hypothesis you want to test.  
 You can think to virtually any hypothesis (provided it is fitting a compartmental linear model definition) and represent it with an ODE. And you can also go further (like nonlinear hypotheses) since `deSolve` also solves PDE systems, I would just not go there without knowing what you are doing in terms of the properties of the model object you are creating...

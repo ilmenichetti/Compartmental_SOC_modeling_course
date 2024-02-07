@@ -252,6 +252,9 @@ $(document).ready(function () {
   <a href="ICBM.html">The ICBM (toy?) model</a>
 </li>
 <li>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
   <a href="calibration.html">Model calibration</a>
 </li>
 <li>
@@ -285,16 +288,81 @@ $(document).ready(function () {
 
 <div id="the-icbm-model-philosophy" class="section level1">
 <h1>The ICBM model philosophy</h1>
+<div id="the-advantages-of-minimalism-introducing-icbm"
+class="section level2">
+<h2>The advantages of minimalism: introducing ICBM</h2>
+<p>ICBM is a rather minimalistic model with only two pools, one (<span
+class="math inline">\(Y\)</span>) representing the young litter and
+another (<span class="math inline">\(O\)</span>) representing the “old”,
+or “humified”, organic matter.<br />
+The model is conceptually not so distant from Hénin and Dupuis model,
+and it becomes identical if the decay constant of the “young” pool,
+<span class="math inline">\(k_y\)</span>, is set to <span
+class="math inline">\(1\)</span>: all organic material coming to the
+soil is either instantly respired or transferred to the SOM.</p>
+<pre class="tex"><code>\usetikzlibrary{arrows,automata} 
+    \begin{tikzpicture}[shorten &gt;=1pt,node distance=2.3cm,&gt;=stealth&#39;,thick]
+        \node[state] (1) {$O$};
+        \node[state, left of=1] (d1) {$Y$};
+        \coordinate[above of=1] (d2);
+        \coordinate[above of=d1] (d0);
+        \coordinate[left of=d1] (d00);
+        \draw [-&gt;] (d00) to node[auto] {$I$} (d1);
+        \draw [-&gt;] (d1) to node[auto] {$h \cdot k_y \cdot Y$} (1);
+        \draw [-&gt;] (1) to node[auto] {$k_o \cdot O$} (d2);
+        \draw [-&gt;] (d1) to node[auto] {$(1-h) \cdot k_y \cdot Y$} (d0);
+    \end{tikzpicture}
+    </code></pre>
+<p><img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
 </div>
-<div id="icbm-in-its-basic-form" class="section level1">
-<h1>ICBM in its basic form</h1>
+<div id="the-advantages-of-minimalism-easily-solved-steady-states"
+class="section level2">
+<h2>The advantages of minimalism: easily solved steady states</h2>
+<p>No system will accumulate or lose C indefinitely. The rates will
+always tend to zero.<br />
+When the rate of SOC variation is zero, the system is in
+<strong>equilibrium</strong>, and inputs equal outputs. For example a
+land use change from a relatively rich environment (a forest) to an
+environment with less C inputs (agriculture). SOC will decrease over
+time until it reaches the new equilibrium:
+<img src="ICBM_files/figure-html/unnamed-chunk-2-1.png" width="50%" />
+The steady states are, by definition, where the rate of variation <span
+class="math inline">\(\frac{dC}{dt}=0\)</span>. For a single pool model
+(Olson) this becomes easily solved. The steady state means that for a
+certain amount of C <span class="math inline">\(C_{ss}\)</span> the
+variation is zero: <span class="math inline">\(0 = I - k \cdot
+C_{ss}\)</span>, which means <span class="math inline">\(k \cdot C_{ss}
+= I\)</span> and therefore <span
+class="math inline">\(C_{ss}=\frac{I}{k}\)</span>.</p>
+<p>A slightly more complicated model, like the two pool (Y and O) ICBM,
+has still relatively simple analyitcal solution: <span
+class="math display">\[
+Y_{ss}=\frac{I}{k_y}\\
+O_{ss}=\epsilon\cdot\frac{I}{k_o}
+\]</span> Any linear model, with an arbitrary number of pools, has an
+analytical solution. But having it so short and easily manageable can
+sometimes be useful.</p>
+</div>
+<div id="the-disadvantages-of-minimalism-loss-in-long-term-accuracy"
+class="section level2">
+<h2>The disadvantages of minimalism: loss in long-term accuracy</h2>
+<p>More pools define a more complex curve. This results in less
+approximation, and the models become more general.<br />
+<img src="figures/1vs3pools.png" style="width:70.0%" /> For example a
+1 pool model is not going to be able to represent the long-term trends
+of the more recalcitrant soil components well, and already on a few
+decades scale it can accumulate a significant error.<br />
+When extrapolating on long time scales (several centuries or more) 3 or
+more pools are necessary (assuming we can initialize the model
+correctly).</p>
+</div>
 </div>
 <div id="what-model-category-belongs-to" class="section level1">
 <h1>What model category belongs to?</h1>
 </div>
-<div id="hands-on-mplementing-icbm-as-an-ode-system"
+<div id="hands-on-implementing-icbm-as-an-ode-system"
 class="section level1">
-<h1>Hands-on: mplementing ICBM as an ODE system</h1>
+<h1>Hands-on: implementing ICBM as an ODE system</h1>
 <p>This is a very flexible approach for anyone who knows already some R
 basics because it allows us to build a model (any linear model, and to
 some extent also nonlinear) just by defining it as an ODE system.</p>
@@ -311,7 +379,7 @@ want to implement: <span class="math display">\[
 O
 \]</span></p>
 <p>Which can be conceptually visualized like this:
-<img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="288" /></p>
+<img src="ICBM_files/figure-html/unnamed-chunk-3-1.png" width="288" /></p>
 </div>
 <div id="loading-the-solver" class="section level2">
 <h2>Loading the solver</h2>
@@ -373,10 +441,7 @@ model definition. We can sum up the two pools to find the total SOC</p>
 <h2>What if?</h2>
 <p>For example, what if you wanted to modify the model adding one
 specific Y pool for roots and one for shoots?</p>
-<p><img src="ICBM_files/figure-html/unnamed-chunk-9-1.png" width="480" /></p>
-</div>
-<div id="what-if-1" class="section level2">
-<h2>What if?</h2>
+<p><img src="ICBM_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
 <p>You can then just define the model as an ODE system: <span
 class="math display">\[
 \frac{dY_{r,}}{dt}= I_r - k_y \cdot r \cdot Y \\
@@ -387,9 +452,6 @@ class="math display">\[
 r  \cdot Y_s  - k_o \cdot r  \cdot O
 \]</span> And now we are ready to write this system into the solver, and
 then we have our model.</p>
-</div>
-<div id="what-if-2" class="section level2">
-<h2>What if?</h2>
 <p>This is just an example. We assumed, among many other things, that
 the two <code>Y</code> pools decay at the same constant rate
 <code>k_y</code>, but this is not necessarily the case, it all depends
