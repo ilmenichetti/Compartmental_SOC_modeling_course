@@ -2,8 +2,54 @@
 title: "Bayesian approach to modeling"
 ---
 
-Hello, Website!
+# The concept of equilibrium
+Equilibrium in a dynamical model is a state where the model state variables do not change over time.  
+This is a very important concept in dynamical systems theory, but luckily here we are considering an extremely simple case. For complex models, equilibrium points can be local attractors. In other words, there can be certain states for a model where it will tend to after any perturbation. Think to ecological states, like a certain state of an ecosystem. And complex models can have more than one equilibrium point.  
+ICBM is not complex, and it has only one equilibrium point. This makes our life during this section quite easy.  
 
-For more information about simple R Markdown websites, please read the documentation at https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html.
+The state variables for ICBM are the pools, $Y$ and $O$. The equilibrium point is the point where the rate of change of the pools is zero, and therefore also the rate of change of total SOC. At equilibrium, since the rate of change of SOC is zero, the SOC simulation is just a flat line. No change.  
+This equilibrium, once the parameters are given, is defined by one thing only: the inputs.
 
-Please also note that simple R Markdown sites are _not_ based on **blogdown**. They are probably good for websites with only a few Rmd documents. For larger-scale and more sophisticated websites (such as blogs), you may want to use **blogdown** instead: https://github.com/rstudio/blogdown.
+# Why does it matter?
+With steady states, you are simulating the consequences of land use changes. That is what changes the inputs of a system. You change agronomic management, or you change the system (for example you cultivate a grassland): this will change the inputs of C to the soil. And will also ultimately change the SOC content, which will always tend to an amount which is defined by the inputs. It might take more or less time to get there, but it will get there.  
+In practice, equilibrium does not exist. It will never happen that you have constant inputs. And if it will happen, you will not have constant temperature and moisture, which change the model kinetics and therefore the equilibrium point. In reality, there are always oscillations. But we can assume that these will be around the equilibrium point.  
+With a very simple equation, with ICBM you can predict what a certain land use change will do to the SOC content.  
+
+# Solving the equilibrium
+**IMPORTANT: what follows is just for your curiosity, if you are. You do NOT need to understand all this. We will not work analitically, we will always use numerical solvers to make the computer find these solutions for us. But it can be useful to know the idea.**  
+We will now solve the equilibrium of the ICBM model. We will do this by setting the time derivatives to zero, since that is the definition of equilibrium, and solving for the steady state conditions.
+
+
+## 1: Set the time derivatives to zero to find the steady state conditions:
+$$
+0 = I - k_y  \cdot Y \\
+0 = h \cdot k_y \cdot Y - k_o \cdot O
+$$
+
+## 2: Solve the system of equations for the steady state conditions:
+To solve for Y, rearrange the first equation:
+
+$$
+Y = \frac{I}{k_y }
+$$
+
+## 3: Substitute the value of Y into the second equation to solve for O:
+With the value of Y found, substitute it into the second equation:
+$$
+0 = h \cdot k_y  \cdot \left(\frac{I}{k_y }\right) - k_o  \cdot O
+$$
+Simplify and solve for O:
+
+$$
+O = \frac{h \cdot I}{k_o}
+$$
+
+## There! The steady state of the system is:
+
+$$
+Y_{ss} = \frac{I}{k_y} \\
+O_{ss} = \frac{h \cdot I}{k_o }
+$$
+
+In order to find the total SOC of the system you just need to sum the two pools, $ SOC = Y_{ss} + O_{ss}$.  
+You can see in the last two equations that once the parameters are given, the steady state is defined only by the inputs.

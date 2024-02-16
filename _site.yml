@@ -10,10 +10,12 @@ navbar:
       href: ICBM.html
     - text: "The steady state concept"
       href: steadystate.html
-    - text: "Model calibration"
-      href: calibration.html
+    - text: "Introducing climate"
+      href: climate.html
     - text: "Model space and equifinality"
       href: space.html
+    - text: "Model calibration"
+      href: calibration.html
     - text: "Bayes"
       href: bayes.html
 

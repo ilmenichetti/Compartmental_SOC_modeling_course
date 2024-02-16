@@ -3,11 +3,15 @@ title: "ICBM: the simplest SOC model"
 ---
 
 # The ICBM model philosophy
+ICBM is a relatively simple SOC model, with only two pools. It is based on the idea that the organic matter in the soil can be divided into two main categories: the "young" organic matter, which is relatively labile and can be easily decomposed, and the "old" organic matter, which is more stable and can be considered as humified. But these two pools are more a conceptual distinction than a real one. The same is true, though, for any compartmental SOC model since  the organic matter is in fact a continuum of different degrees of decomposition and introducing compartment will always be a simplification of reality.  
+The pools are defined by their decomposition kinetic, which is defining the speed at which they decay. This can be related to the mean residence time of the organic matter in the pool. The distinction between a certain pool and another is, in the end, just a relatively arbitrari threshold in the mean residence time: "slower" molecules will be indentified as in the slower pool, "faster" (so more fresh and decomposable material) in the faster.  
+The main philosophy behind ICBM is to keep the whole thing simple, since in the end there is not much difference mathematically speaking between a model with two or a model with ten pools. ICBM works for time scales of centuries (at least less than one), and it is therefore useful enough for most applications.  
+On the good side, once you understand ICBM, you understand the principles behind any other first order compartimental SOC model. It is therefore the perfect model for this course...   
 
 ## The advantages of minimalism: introducing ICBM
 ICBM is a rather minimalistic model with only two pools, one ($Y$) representing the young litter and another ($O$) representing the "old", or "humified", organic matter.  
 The model is conceptually not so distant from Hénin and Dupuis model, and it becomes identical if the decay constant of the "young" pool, $k_y$, is set to $1$: all organic material coming to the soil is either instantly respired or transferred to the SOM.
-```{tikz, fig.cap = "", fig.ext = 'png', fig.width=4.5}
+```{tikz, fig.cap = "", fig.ext = 'png', fig.width=4.5, echo=FALSE}
 \usetikzlibrary{arrows,automata} 
     \begin{tikzpicture}[shorten >=1pt,node distance=2.3cm,>=stealth',thick]
         \node[state] (1) {$O$};
@@ -23,10 +27,13 @@ The model is conceptually not so distant from Hénin and Dupuis model, and it be
     
 ```
 
+The flux from the $O$ pool is easily understood: a certain amount of the C in $O$ (defined by $k$) is metabolized at any time step and released as $CO_2$. The flux defines what remains in the pool, as well as what is respired.  
+The flux from the $Y$ pool is a bit more complex. It is divided into two parts: one part is transferred to the $O$ pool, and the other part is respired. The fraction of the C in the $Y$ pool that is transferred to the $O$ pool is defined by the parameter $h$. The rest ($1-h$) is respired. The latter flux is often not written, depending on the application.  
+The $h$ parameter is defined as "humification factor" and it is supposed to represent the material that is "humified" (or "stabilized") in the soil. It is a bit of a simplification, since the material that is transferred to the $O$ pool is not necessarily stabilized, but it is a useful concept.
 
 ## The advantages of minimalism: easily solved steady states
 No system will accumulate or lose C indefinitely. The rates will always tend to zero.  
-When the rate of SOC variation is zero, the system is in **equilibrium**, and inputs equal outputs. For example a land use change from a relatively rich environment (a forest) to an environment with less C inputs (agriculture). SOC will decrease over time until it reaches the new equilibrium:
+When the rate of SOC variation is zero, the system is in **equilibrium**, and inputs equal outputs. We will explore more in detail this concept in the following section, but for example a land use change from a relatively rich environment (a forest) to an environment with less C inputs (agriculture). SOC will decrease over time until it reaches the new equilibrium:
 ```{r echo=FALSE, out.width="50%"}
 X_0=50
 k=0.1
@@ -43,7 +50,7 @@ text(10,L/k+1.2, "Final steady state", col="darkgreen", cex=0.6)
 ```
 The steady states are, by definition, where the rate of variation $\frac{dC}{dt}=0$. For a single pool model (Olson) this becomes easily solved. The steady state means that for a certain amount of C $C_{ss}$ the variation is zero: $0 = I - k \cdot C_{ss}$, which means $k \cdot C_{ss} = I$ and therefore $C_{ss}=\frac{I}{k}$.
   
-A slightly more complicated model, like the two pool (Y and O) ICBM, has still relatively simple analyitcal solution:
+A slightly more complicated model, like the two pool (Y and O) ICBM, has still relatively simple analytical solution:
 $$
 Y_{ss}=\frac{I}{k_y}\\
 O_{ss}=\epsilon\cdot\frac{I}{k_o}
@@ -80,7 +87,7 @@ $$
 $$
   
 Which can be conceptually visualized like this:
-```{tikz, fig.cap = "", fig.ext = 'png', fig.width=3}
+```{tikz, fig.cap = "", fig.ext = 'png', fig.width=3, echo=FALSE}
 \usetikzlibrary{arrows,automata} 
     \begin{tikzpicture}[shorten >=1pt,node distance=2.3cm,>=stealth',thick]
         \node[state] (1) {$O$};

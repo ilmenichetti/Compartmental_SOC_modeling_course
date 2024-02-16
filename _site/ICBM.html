@@ -255,10 +255,10 @@ $(document).ready(function () {
   <a href="steadystate.html">The steady state concept</a>
 </li>
 <li>
-  <a href="calibration.html">Model calibration</a>
+  <a href="space.html">Model space and equifinality</a>
 </li>
 <li>
-  <a href="space.html">Model space and equifinality</a>
+  <a href="calibration.html">Model calibration</a>
 </li>
 <li>
   <a href="bayes.html">Bayes</a>
@@ -288,6 +288,31 @@ $(document).ready(function () {
 
 <div id="the-icbm-model-philosophy" class="section level1">
 <h1>The ICBM model philosophy</h1>
+<p>ICBM is a relatively simple SOC model, with only two pools. It is
+based on the idea that the organic matter in the soil can be divided
+into two main categories: the “young” organic matter, which is
+relatively labile and can be easily decomposed, and the “old” organic
+matter, which is more stable and can be considered as humified. But
+these two pools are more a conceptual distinction than a real one. The
+same is true, though, for any compartmental SOC model since the organic
+matter is in fact a continuum of different degrees of decomposition and
+introducing compartment will always be a simplification of
+reality.<br />
+The pools are defined by their decomposition kinetic, which is defining
+the speed at which they decay. This can be related to the mean residence
+time of the organic matter in the pool. The distinction between a
+certain pool and another is, in the end, just a relatively arbitrari
+threshold in the mean residence time: “slower” molecules will be
+indentified as in the slower pool, “faster” (so more fresh and
+decomposable material) in the faster.<br />
+The main philosophy behind ICBM is to keep the whole thing simple, since
+in the end there is not much difference mathematically speaking between
+a model with two or a model with ten pools. ICBM works for time scales
+of centuries (at least less than one), and it is therefore useful enough
+for most applications.<br />
+On the good side, once you understand ICBM, you understand the
+principles behind any other first order compartimental SOC model. It is
+therefore the perfect model for this course…</p>
 <div id="the-advantages-of-minimalism-introducing-icbm"
 class="section level2">
 <h2>The advantages of minimalism: introducing ICBM</h2>
@@ -299,21 +324,8 @@ The model is conceptually not so distant from Hénin and Dupuis model,
 and it becomes identical if the decay constant of the “young” pool,
 <span class="math inline">\(k_y\)</span>, is set to <span
 class="math inline">\(1\)</span>: all organic material coming to the
-soil is either instantly respired or transferred to the SOM.</p>
-<pre class="tex"><code>\usetikzlibrary{arrows,automata} 
-    \begin{tikzpicture}[shorten &gt;=1pt,node distance=2.3cm,&gt;=stealth&#39;,thick]
-        \node[state] (1) {$O$};
-        \node[state, left of=1] (d1) {$Y$};
-        \coordinate[above of=1] (d2);
-        \coordinate[above of=d1] (d0);
-        \coordinate[left of=d1] (d00);
-        \draw [-&gt;] (d00) to node[auto] {$I$} (d1);
-        \draw [-&gt;] (d1) to node[auto] {$h \cdot k_y \cdot Y$} (1);
-        \draw [-&gt;] (1) to node[auto] {$k_o \cdot O$} (d2);
-        \draw [-&gt;] (d1) to node[auto] {$(1-h) \cdot k_y \cdot Y$} (d0);
-    \end{tikzpicture}
-    </code></pre>
-<p><img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
+soil is either instantly respired or transferred to the SOM.
+<img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
 </div>
 <div id="the-advantages-of-minimalism-easily-solved-steady-states"
 class="section level2">

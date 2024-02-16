@@ -255,10 +255,10 @@ $(document).ready(function () {
   <a href="steadystate.html">The steady state concept</a>
 </li>
 <li>
-  <a href="calibration.html">Model calibration</a>
+  <a href="space.html">Model space and equifinality</a>
 </li>
 <li>
-  <a href="space.html">Model space and equifinality</a>
+  <a href="calibration.html">Model calibration</a>
 </li>
 <li>
   <a href="bayes.html">Bayes</a>
@@ -286,17 +286,97 @@ $(document).ready(function () {
 </div>
 
 
-<p>Hello, Website!</p>
-<p>For more information about simple R Markdown websites, please read
-the documentation at <a
-href="https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html"
-class="uri">https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html</a>.</p>
-<p>Please also note that simple R Markdown sites are <em>not</em> based
-on <strong>blogdown</strong>. They are probably good for websites with
-only a few Rmd documents. For larger-scale and more sophisticated
-websites (such as blogs), you may want to use <strong>blogdown</strong>
-instead: <a href="https://github.com/rstudio/blogdown"
-class="uri">https://github.com/rstudio/blogdown</a>.</p>
+<div id="the-concept-of-equilibrium" class="section level1">
+<h1>The concept of equilibrium</h1>
+<p>Equilibrium in a dynamical model is a state where the model state
+variables do not change over time.<br />
+This is a very important concept in dynamical systems theory, but
+luckily here we are considering an extremely simple case. For complex
+models, equilibrium points can be local attractors. In other words,
+there can be certain states for a model where it will tend to after any
+perturbation. Think to ecological states, like a certain state of an
+ecosystem. And complex models can have more than one equilibrium
+point.<br />
+ICBM is not complex, and it has only one equilibrium point. This makes
+our life during this section quite easy.</p>
+<p>The state variables for ICBM are the pools, <span
+class="math inline">\(Y\)</span> and <span
+class="math inline">\(O\)</span>. The equilibrium point is the point
+where the rate of change of the pools is zero, and therefore also the
+rate of change of total SOC. At equilibrium, since the rate of change of
+SOC is zero, the SOC simulation is just a flat line. No change.<br />
+This equilibrium, once the parameters are given, is defined by one thing
+only: the inputs.</p>
+</div>
+<div id="why-does-it-matter" class="section level1">
+<h1>Why does it matter?</h1>
+<p>With steady states, you are simulating the consequences of land use
+changes. That is what changes the inputs of a system. You change
+agronomic management, or you change the system (for example you
+cultivate a grassland): this will change the inputs of C to the soil.
+And will also ultimately change the SOC content, which will always tend
+to an amount which is defined by the inputs. It might take more or less
+time to get there, but it will get there.<br />
+In practice, equilibrium does not exist. It will never happen that you
+have constant inputs. And if it will happen, you will not have constant
+temperature and moisture, which change the model kinetics and therefore
+the equilibrium point. In reality, there are always oscillations. But we
+can assume that these will be around the equilibrium point.<br />
+With a very simple equation, with ICBM you can predict what a certain
+land use change will do to the SOC content.</p>
+</div>
+<div id="solving-the-equilibrium" class="section level1">
+<h1>Solving the equilibrium</h1>
+<p><strong>IMPORTANT: what follows is just for your curiosity, if you
+are. You do NOT need to understand all this. We will not work
+analitically, we will always use numerical solvers to make the computer
+find these solutions for us. But it can be useful to know the
+idea.</strong><br />
+We will now solve the equilibrium of the ICBM model. We will do this by
+setting the time derivatives to zero, since that is the definition of
+equilibrium, and solving for the steady state conditions.</p>
+<div
+id="set-the-time-derivatives-to-zero-to-find-the-steady-state-conditions"
+class="section level2">
+<h2>1: Set the time derivatives to zero to find the steady state
+conditions:</h2>
+<p><span class="math display">\[
+0 = I - k_y \cdot r \cdot Y \\
+0 = h \cdot k_y \cdot r \cdot Y - k_o \cdot r \cdot O
+\]</span></p>
+</div>
+<div id="solve-the-system-of-equations-for-the-steady-state-conditions"
+class="section level2">
+<h2>2: Solve the system of equations for the steady state
+conditions:</h2>
+<p>To solve for Y, rearrange the first equation:</p>
+<p><span class="math display">\[
+Y = \frac{I}{k_y \cdot r}
+\]</span></p>
+</div>
+<div
+id="substitute-the-value-of-y-into-the-second-equation-to-solve-for-o"
+class="section level2">
+<h2>3: Substitute the value of Y into the second equation to solve for
+O:</h2>
+<p>With the value of Y found, substitute it into the second equation:
+<span class="math display">\[
+0 = h \cdot k_y \cdot r \cdot \left(\frac{I}{k_y \cdot r}\right) - k_o
+\cdot r \cdot O
+\]</span> Simplify and solve for O:</p>
+<p><span class="math display">\[
+O = \frac{h \cdot I}{k_o \cdot r}
+\]</span></p>
+</div>
+<div id="there-the-steady-state-of-the-system-is"
+class="section level2">
+<h2>There! The steady state of the system is:</h2>
+<p><span class="math display">\[
+Y = \frac{I}{k_y \cdot r} \\
+O = \frac{h \cdot I}{k_o \cdot r}
+\]</span></p>
+</div>
+</div>
 
 
 

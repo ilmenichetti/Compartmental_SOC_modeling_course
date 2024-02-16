@@ -20,7 +20,7 @@ title: "Compartmental SOC models"
 <div class="columns-2">
   <div class="centered">
   ![](./figures/me.jpg){height=350}
-  316 kB, Reality
+  316 kB, "Reality"
   </div>
 
 <div class="centered">
