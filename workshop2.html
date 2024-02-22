@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Exploring the ICBM model space</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Crash course in compartmental modeling</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="history.html">History of SOC models</a>
+</li>
+<li>
+  <a href="ICBM.html">The ICBM (toy?) model</a>
+</li>
+<li>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
+  <a href="climate.html">Introducing climate</a>
+</li>
+<li>
+  <a href="space.html">Model space and equifinality</a>
+</li>
+<li>
+  <a href="calibration.html">Model calibration</a>
+</li>
+<li>
+  <a href="bayes.html">Bayes</a>
+</li>
+<li>
+  <a href="workshop1.html">Workshop 1: write and calibrate a simple SOC model</a>
+</li>
+<li>
+  <a href="workshop2.html">Workshop 2: explore the ICBM model space</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Exploring the ICBM model space</h1>
+
+</div>
+
+
+<div id="purpose-of-this-module" class="section level1">
+<h1>Purpose of this module</h1>
+<ul>
+<li>Make you confident with the model parameter space</li>
+<li>Make you understand what is a model sensitivity analisys, and how
+model calibrations work in detail</li>
+<li>Make you understand the concept of model equifinality</li>
+<li>Make you understand that models are not reality, but only one
+possible representation of it among infinite others</li>
+</ul>
+</div>
+<div id="the-key-question-you-need-to-focus-on" class="section level1">
+<h1>The key question you need to focus on</h1>
+<p>You should try to understand the interactions between model
+parameters and the model outputs. In particular: * For a given input
+levels and and a given measured SOC, what are the possible parameter
+combinations? And why?</p>
+</div>
+<div
+id="first-task-study-the-equilibrium-point-in-the-model-parameter-space"
+class="section level1">
+<h1>First task: study the equilibrium point in the model parameter
+space</h1>
+<p>First, we should write down a function for the model we want to
+explore. In this case, we want to explore the equilibrium point of the
+ICBM model, and we can therefore use the analytical solution we have
+found in the previous sections.</p>
+<pre class="r"><code># Define the steady state model
+ICBM_ss &lt;- function(I, ky, ko, h){
+  Y_ss &lt;- I/ky
+  O_ss &lt;- h*I/ko
+  SOC_ss &lt;- Y_ss + O_ss
+  return(SOC_ss)
+}</code></pre>
+<p>Ok, so we have defined the model. Now we can explore the model
+parameter space. The model parameter space is the space defined by the
+model parameters. In this case, we have 4 parameters: I, ky, ko, h. We
+can explore the model parameter space by varying the parameters and
+studying the response of the model.<br />
+For simlicity, in this case we can assume I (the inputs) to be constant,
+equal to 2 tons ha<span class="math inline">\(^{-1}\)</span>, and
+therefore study the parameter space defined by ky, ko, and h.</p>
+</div>
+<div id="regular-grid-exploration" class="section level1">
+<h1>Regular grid exploration</h1>
+<p>The object we need to run the exploration is a matrix where each
+column corresponds to a parameter, and each row to one combination of
+possible parameter values. For a regular grid. we can use the R function
+expand.grid to create a matrix of parameters. We can then use the
+function apply to run the model for each parameter combination.</p>
+<pre class="r"><code>parameters_regular &lt;- expand.grid(ky = seq(from=0.1, to=0.95, length=10), ko = seq(from=0.001, to=0.05, length=10), h = seq(from=0.1, to=0.5, length=10))
+
+#show the first rows of the data frame
+head(parameters_regular)</code></pre>
+<pre><code>##          ky    ko   h
+## 1 0.1000000 0.001 0.1
+## 2 0.1944444 0.001 0.1
+## 3 0.2888889 0.001 0.1
+## 4 0.3833333 0.001 0.1
+## 5 0.4777778 0.001 0.1
+## 6 0.5722222 0.001 0.1</code></pre>
+<p>You can see here we are building a regular grid of length 10. The
+function expand.grid creates a matrix of all possible combinations of
+the parameters, and the dimensions of the resulting matrix:</p>
+<pre class="r"><code>dim(parameters_regular)</code></pre>
+<pre><code>## [1] 1000    3</code></pre>
+<p>corresponds to 10 $ $ 10 $ $ 10 = 1000, which is the number of
+possible combinations of the parameters, and 3 which is the number of
+parameters in our model</p>
+</div>
+<div id="random-grid-exploration" class="section level1">
+<h1>Random grid exploration</h1>
+<p>We can also explore the model parameter space by using a random grid
+of parameters.</p>
+<pre class="r"><code>parameters_random &lt;- data.frame(ky= runif(1000, min=0.1, max=0.95), ko=runif(1000, min=0.001, max=0.05), h=runif(1000, min=0.1, max=0.5))
+
+#show the first rows of the data frame
+head(parameters_random)</code></pre>
+<pre><code>##          ky         ko         h
+## 1 0.2067770 0.01473413 0.1069817
+## 2 0.1042217 0.02676323 0.2709012
+## 3 0.7373048 0.02360553 0.2136833
+## 4 0.2340663 0.04939324 0.3139531
+## 5 0.2531846 0.01816173 0.1670910
+## 6 0.9400350 0.04197788 0.1106309</code></pre>
+<p>The function runif creates a random grid of parameters between the
+requested intervals, and the dimensions of the resulting matrix:</p>
+<pre class="r"><code>dim(parameters_random)</code></pre>
+<pre><code>## [1] 1000    3</code></pre>
+<p>are still the same as <code>parameters_regular</code>, but the
+parameter combinations are now random.</p>
+<div id="run-the-model-for-each-parameter-combination"
+class="section level2">
+<h2>Run the model for each parameter combination</h2>
+<p>We can now use the matrices we just created to run the model for each
+parameter combination. We could use the function apply to do so, but I
+will use a for loop for better readability</p>
+<pre class="r"><code># Create a data frame tostore the results from the regular grid
+results_regular &lt;- c()
+
+# run a loop for each parameter combination of the regular grid
+for(i in 1:nrow(parameters_regular)){
+  results_regular[i] &lt;- ICBM_ss(2, parameters_regular[i, &quot;ky&quot;], parameters_regular[i, &quot;ko&quot;], parameters_regular[i, &quot;h&quot;])
+}
+
+
+# Create a data frame tostore the results from the random grid
+results_random &lt;-c()
+# run a loop for each parameter combination of the random grid
+for(i in 1:nrow(parameters_random)){
+  results_random[i] &lt;- ICBM_ss(2, parameters_random[i, &quot;ky&quot;], parameters_random[i, &quot;ko&quot;], parameters_random[i, &quot;h&quot;])
+}</code></pre>
+</div>
+<div id="plotting-the-parameter-space" class="section level2">
+<h2>Plotting the parameter space</h2>
+<p>We can now plot the parameter space and the response of the model.
+One possibility is to try to plot the respoinse surface, but the problem
+is that we have a 4-dimensional space and we can only visualize 3
+dimensions. We can select some parameters, for example <code>ky</code>
+and <code>ko</code>, plotting them against the response
+(<code>SOC_ss</code>). We can use the function plot3d from the package
+rgl to do so.</p>
+<p>In order to run this code, you will need to install and load the
+package <code>scatterplot3d</code></p>
+<pre class="r"><code>install.packages(&quot;scatterplot3d&quot;)</code></pre>
+<p>And now load it and plot the results:</p>
+<pre class="r"><code>library(scatterplot3d)  
+
+# Plot the regular grid
+scatterplot3d(parameters_regular$ky, parameters_regular$ko, results_regular, xlab=&quot;ky&quot;, ylab=&quot;ko&quot;, zlab=&quot;SOC_ss&quot;, main=&quot;Regular grid&quot;)</code></pre>
+<p><img src="workshop2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>You can see one of the problems in this visualization is that for
+each combination of <code>ky</code> and <code>ko</code> we do not have a
+single value of <code>SOC_ss</code> (since there is also the variation
+of <code>h</code>), but a range of values.<br />
+An easy solution for plotting multidimensional parameter spaces is to
+use dotty plots, where we plot the response of the model as a function
+of each parameter.</p>
+<pre class="r"><code>par(mfrow=c(2,ceiling(dim(parameters_random)[2]/2)))
+for( i in 1:dim(parameters_regular)[2]){
+  plot(parameters_regular[,i], results_regular, xlab=names(parameters_regular)[i], ylab=&quot;SOC_ss&quot;, main=paste(&quot;Regular grid - &quot;, names(parameters_regular)[i]))
+}</code></pre>
+<p><img src="workshop2_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Here you can start appreciating the limits of the regular grid
+exploration. If you plot in the same way the random grid exploration,
+the plot becomes clearer:</p>
+<pre class="r"><code>par(mfrow=c(2,ceiling(dim(parameters_random)[2]/2)))
+for( i in 1:dim(parameters_random)[2]){
+  plot(parameters_random[,i], results_random, xlab=names(parameters_random)[i], ylab=&quot;SOC_ss&quot;, main=paste(&quot;Random grid - &quot;, names(parameters_random)[i]))
+}</code></pre>
+<p><img src="workshop2_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+<div id="questions-you-have-to-answer" class="section level1">
+<h1>Questions you have to answer</h1>
+<p>By considering the above plots, you should now answer the following
+questions, relatively to the random grid exploration, in written
+form:</p>
+<div
+style="background-color: #f0e68c; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+<ul>
+<li>What is the most important parameter in the model to determine the
+steady state SOC?</li>
+<li>Why we observe such scatter in the points</li>
+</ul>
+</div>
+And using R, also:
+<div
+style="background-color: #f0e68c; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+<ul>
+<li>What is the range of parameter values that lead to a SOC of 100 tons
+ha<span class="math inline">\(^{-1}\)</span>?</li>
+</ul>
+</div>
+</div>
+<div
+id="second-task-study-the-response-of-the-model-in-the-model-parameter-space"
+class="section level1">
+<h1>Second task: study the response of the model in the model parameter
+space</h1>
+<p>I now want you to do the same, but considering the model in its
+transient form. I want you to explore the response of the model after 10
+years of simulation, and to do so you will have to modify the model
+function to include a time variable. I will write for you the model
+function incorporating the ICBM ODE into a solver</p>
+<p>In order to run this code, you will need to install and load the
+package <code>deSolve</code></p>
+<pre class="r"><code>install.packages(&quot;deSolve&quot;)</code></pre>
+<p>Now the solved ICBM function:</p>
+<pre class="r"><code>library(deSolve)
+
+
+ICBM_transient &lt;- function(init, I, ky, ko, h, t){
+  # ICBM model
+  # I: input of organic matter
+  # ky: decomposition rate
+  # ko: mineralization rate
+  # h: humification rate
+  # t: time
+  
+  
+  # ODE system
+  ICBM &lt;- function(times, init, parms){
+    with(as.list(c(init, parms)),{
+      dY &lt;- I -  h*ky*Y
+      dO &lt;- h*ky*Y - ko*O
+      return(list(c(dY, dO)))
+    })
+  }
+  
+  # Parameters
+  parms &lt;- c(ky=ky, ko=ko, h=h)
+  
+  # Solve the ODE
+  out &lt;- ode(y=init, times=t, func=ICBM, parms=parms)
+  
+  # Return the steady state SOC
+  return(out)
+}</code></pre>
+<p>What changed now is that since we are exploring what happens between
+two time points, we how have to define the time vector and most
+importantly the initial conditions for the ODE solver.</p>
+<pre class="r"><code>  # Initial conditions
+  init &lt;- c(Y=2, O=40)</code></pre>
+<p>The initial conditions are the state of the model at the beginning of
+the simulation, so in our case the size of the two organic matter
+pools.</p>
+<p>The time vector can be anything defining the time where we want to
+run the model, for example for the first 10 time steps:</p>
+<pre class="r"><code>  # Time vector
+  t &lt;- seq(0, 10, by=1)</code></pre>
+<div id="explore-the-parameter-space" class="section level2">
+<h2>Explore the parameter space</h2>
+<p>We can utilize the random parameter matrix we prepared before to
+explore the response of the model in the parameter space. We will use
+the same approach as before, but now we are just going to use the
+transient function. we want to know the SOC after 10 years of simulation
+for each parameter combination.</p>
+<p>One problem is that in order to run the solver we need a vector of
+regular time steps, but we are interested only in the value at t=10.
+Runining the model reveals the nature of the output:</p>
+<pre class="r"><code>ICBM_transient(init, I=2, ky=0.3, ko=0.01, h=0.34, t=t)</code></pre>
+<pre><code>##    time         Y        O
+## 1     0  2.000000 40.00000
+## 2     1  3.707436 39.89324
+## 3     2  5.249305 39.95228
+## 4     3  6.641660 40.15948
+## 5     4  7.898997 40.49896
+## 6     5  9.034410 40.95636
+## 7     6 10.059719 41.51876
+## 8     7 10.985604 42.17448
+## 9     8 11.821707 42.91300
+## 10    9 12.576732 43.72485
+## 11   10 13.258542 44.60146</code></pre>
+<p>We can now build our loop considering only time=10. We also want the
+total SOC, so we need to sum up the two pools at time = 10. Let’s test
+one solution:</p>
+<pre class="r"><code>sum(ICBM_transient(init, I=2, ky=0.3, ko=0.01, h=0.34, t=t)[10,2:3])</code></pre>
+<pre><code>## [1] 56.30158</code></pre>
+<p>It seems to work, we can now build our loop:</p>
+<pre class="r"><code>#define the time
+# Create a data frame tostore the results from the random grid
+results_random_transient &lt;-c()
+# run a loop for each parameter combination of the random grid
+for(i in 1:nrow(parameters_random)){
+  results_random_transient[i] &lt;- sum(ICBM_transient(init, I=2, ky=parameters_random[i, &quot;ky&quot;], ko=parameters_random[i, &quot;ko&quot;], h=parameters_random[i, &quot;h&quot;], t=t)[10,2:3])
+}  </code></pre>
+<p>…and from here I want you to proceed alone. By working with R, you
+should answer the following questions:</p>
+<div
+style="background-color: #f0e68c; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+<ul>
+<li>What is the range of parameter values that lead to a SOC of 100 tons
+ha<span class="math inline">\(^{-1}\)</span> after 10 years, when
+starting from 70 tons ha<span class="math inline">\(^{-1}\)</span>
+(Y=10, O=60)?</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

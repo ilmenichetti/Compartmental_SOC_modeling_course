@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>The model parameter space is a nice place</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Crash course in compartmental modeling</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="history.html">History of SOC models</a>
+</li>
+<li>
+  <a href="ICBM.html">The ICBM (toy?) model</a>
+</li>
+<li>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
+  <a href="climate.html">Introducing climate</a>
+</li>
+<li>
+  <a href="space.html">Model space and equifinality</a>
+</li>
+<li>
+  <a href="calibration.html">Model calibration</a>
+</li>
+<li>
+  <a href="bayes.html">Bayes</a>
+</li>
+<li>
+  <a href="workshop1.html">Workshop 1: write and calibrate a simple SOC model</a>
+</li>
+<li>
+  <a href="workshop2.html">Workshop 2: explore the ICBM model space</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">The model parameter space is a nice
+place</h1>
+
+</div>
+
+
+<p>In this section, we are going to learn to visualize the model
+parameter space. This is a fundamental concept in the calibration of
+models, and it is also a very useful tool to understand the behavior of
+a model.<br />
+The model (parameter) space is the set of all possible combinations of
+the parameters of a model. I usually consider the parametert space as
+defined also by the model response (the result the model gives for each
+parameter combination).</p>
+<div id="the-model-parameter-space-one-parameter"
+class="section level1">
+<h1>The model parameter space: one parameter</h1>
+<p>A model has usually at least one parameter.</p>
+<p>Let’s take for example the following model, describing the
+relationship between soil pH and H<span
+class="math inline">\(^+\)</span> ions in the soil solution (totally
+made up).</p>
+<pre class="r"><code>pH = seq(from = 0, to = 14, by = 0.01) 
+
+k = 1
+
+H_ions = k * pH
+
+plot(pH, H_ions, type=&quot;l&quot;)</code></pre>
+<p><img src="space_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The model space is in this case biimensional, the only dimensions
+being the parameter <span class="math inline">\(k\)</span> and the model
+response. For each level of pH, the model parameter space has a
+response:</p>
+<pre class="r"><code>pH = 8
+
+k = seq(from = 0, to = 2, by = 0.01) 
+
+H_ions = k * pH
+
+plot(k, H_ions, type=&quot;l&quot;)</code></pre>
+<p><img src="space_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="the-model-parameter-space-visualizing-a-threedimensional-space"
+class="section level1">
+<h1>The model parameter space: visualizing a threedimensional space</h1>
+<p>Most models are more complex, and have more than just one parameter.
+But the parameter space is defined in the same way.<br />
+It is still quite easy to imagine a model with two parameters, where the
+space is threedimensional. For example we can consider the function
+linking soil respiration and temperature developed by Llloyd and Taylor
+(1994) onto the Arrhenius function:</p>
+<p><span class="math display">\[
+R_{10} =  \frac {R} {e^{ E_0 \cdot \left(  \frac{1}{283.15 - T_0} -
+\frac{1}{T-T_0} \right)}}
+\]</span></p>
+<p>Where <span class="math inline">\(R\)</span> is the measured
+respiration, <span class="math inline">\(R_{10}\)</span> is the
+standardized respiration at 10<span
+class="math inline">\(^{\circ}\)</span> C, <span
+class="math inline">\(T\)</span> is the current soil temperature, <span
+class="math inline">\(E_0\)</span> is the activation energy of the
+organic matter we are considering, and <span
+class="math inline">\(T_0\)</span> is a temperature scaling
+parameter.<br />
+We can explore the surface of the response of the function within a
+certain range of the two parameters <span
+class="math inline">\(E_0\)</span> and <span
+class="math inline">\(T_0\)</span> for a measured respiration of, say,
+356 g per hour at 27<span class="math inline">\(^{\circ}\)</span>
+C.<br />
+We first define the Lloyd and Taylor function</p>
+<pre class="r"><code># defining first the LLoyd and Taylor function
+lloydtaylor &lt;- function(resp, temp, T0, E0){
+  #rearranging Eq. 11 in LLoyd and Taylor 1994 for R_10 (respiration at standard 10 degrees)
+  R_10 = resp / (exp(E0 * ((1/(283.15 - T0)) - (1/((temp+273.1) - T0)))) ) 
+  return(R_10)
+}</code></pre>
+<p>And now we can explore the parameter space defined by the function at
+356 g per hour at 27<span class="math inline">\(^{\circ}\)</span> C and
+with a range of <span class="math inline">\(E_0\)</span> between 290 and
+330 and <span class="math inline">\(T_0\)</span> betweeen 210 and
+230:</p>
+<pre class="r"><code>E0_vec = seq(from = 290, to = 330, by = 0.1)
+T0_vec = seq(from = 210, to = 230, by = 0.1)</code></pre>
+<p>For the moment do not focus too much on understanding the code
+details, even if it is useful if you do. What we are doing here is
+creating a matrix where one dimension of the matrix is the values we
+give to the parameter <span class="math inline">\(E_0\)</span> and
+another <span class="math inline">\(T_0\)</span>, and then feed to the
+model the values in correspondence of each cell of the matrix to
+calculate the model response:</p>
+<pre class="r"><code>#defining the matrix to store the results
+response &lt;- mat.or.vec(length(E0_vec), length(T0_vec))
+
+for(i in 1:length(E0_vec)){ #loop for each E0 value
+  for (j in 1:length(T0_vec)){ #nested loop, for each T0 value with each E0 value
+    
+    response[i,j] = lloydtaylor(resp = 365,
+                                temp = 27,
+                                T0 = T0_vec[i],
+                                E0 = E0_vec[j])
+    
+  }
+}</code></pre>
+<p>All what we have left to do not is to plot the space we just
+exploredm, which in this case is a three dimensional surface.<br />
+This is not necessarily straightforward to do in R, but I hope the
+concept by now is.</p>
+<pre class="r"><code># install the package in case you don&#39;t have it
+# install.packages(&quot;plot3D&quot;)
+
+library(plot3D) # load the package for the surface plot
+
+persp3D(z = response, x = E0_vec, y = T0_vec, theta = 30, phi = 30, col = &quot;lightblue&quot;, border = &quot;cadetblue&quot;, shade = 0.5, ticktype = &quot;detailed&quot;, xlab = &quot;E0&quot;, ylab = &quot;T0&quot;, zlab = &quot;R10&quot;, nticks = 5)</code></pre>
+<p><img src="space_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>As you can see, in this case some of the parameter values are
+unfeasible, resulting in NAs (the part of the space without any color).
+This kind of exploration is pretty useful to understand the model
+behavior and to identify the feasible parameter space, but of course it
+becomes challenging when the space has more dimensions than 3.<br />
+It is nevertheless possible to find workarounds, such as plotting
+separately each parameter dimension against the response with dots for
+each cell.</p>
+<div id="the-model-fitness-parameter-space" class="section level2">
+<h2>The model fitness-parameter space</h2>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

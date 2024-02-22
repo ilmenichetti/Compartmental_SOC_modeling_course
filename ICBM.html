@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ICBM: the simplest SOC model</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Crash course in compartmental modeling</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="history.html">History of SOC models</a>
+</li>
+<li>
+  <a href="ICBM.html">The ICBM (toy?) model</a>
+</li>
+<li>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
+  <a href="climate.html">Introducing climate</a>
+</li>
+<li>
+  <a href="space.html">Model space and equifinality</a>
+</li>
+<li>
+  <a href="calibration.html">Model calibration</a>
+</li>
+<li>
+  <a href="bayes.html">Bayes</a>
+</li>
+<li>
+  <a href="workshop1.html">Workshop 1: write and calibrate a simple SOC model</a>
+</li>
+<li>
+  <a href="workshop2.html">Workshop 2: explore the ICBM model space</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">ICBM: the simplest SOC model</h1>
+
+</div>
+
+
+<div id="the-icbm-model-philosophy" class="section level1">
+<h1>The ICBM model philosophy</h1>
+<p>ICBM is a relatively simple SOC model, with only two pools. It is
+based on the idea that the organic matter in the soil can be divided
+into two main categories: the “young” organic matter, which is
+relatively labile and can be easily decomposed, and the “old” organic
+matter, which is more stable and can be considered as humified. But
+these two pools are more a conceptual distinction than a real one. The
+same is true, though, for any compartmental SOC model since the organic
+matter is in fact a continuum of different degrees of decomposition and
+introducing compartment will always be a simplification of
+reality.<br />
+The pools are defined by their decomposition kinetic, which is defining
+the speed at which they decay. This can be related to the mean residence
+time of the organic matter in the pool. The distinction between a
+certain pool and another is, in the end, just a relatively arbitrari
+threshold in the mean residence time: “slower” molecules will be
+indentified as in the slower pool, “faster” (so more fresh and
+decomposable material) in the faster.<br />
+The main philosophy behind ICBM is to keep the whole thing simple, since
+in the end there is not much difference mathematically speaking between
+a model with two or a model with ten pools. ICBM works for time scales
+of centuries (at least less than one), and it is therefore useful enough
+for most applications.<br />
+On the good side, once you understand ICBM, you understand the
+principles behind any other first order compartimental SOC model. It is
+therefore the perfect model for this course…</p>
+<div id="the-advantages-of-minimalism-introducing-icbm"
+class="section level2">
+<h2>The advantages of minimalism: introducing ICBM</h2>
+<p>ICBM is a rather minimalistic model with only two pools, one (<span
+class="math inline">\(Y\)</span>) representing the young litter and
+another (<span class="math inline">\(O\)</span>) representing the “old”,
+or “humified”, organic matter.<br />
+The model is conceptually not so distant from Hénin and Dupuis model,
+and it becomes identical if the decay constant of the “young” pool,
+<span class="math inline">\(k_y\)</span>, is set to <span
+class="math inline">\(1\)</span>: all organic material coming to the
+soil is either instantly respired or transferred to the SOM.
+<img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
+<p>The flux from the <span class="math inline">\(O\)</span> pool is
+easily understood: a certain amount of the C in <span
+class="math inline">\(O\)</span> (defined by <span
+class="math inline">\(k\)</span>) is metabolized at any time step and
+released as <span class="math inline">\(CO_2\)</span>. The flux defines
+what remains in the pool, as well as what is respired.<br />
+The flux from the <span class="math inline">\(Y\)</span> pool is a bit
+more complex. It is divided into two parts: one part is transferred to
+the <span class="math inline">\(O\)</span> pool, and the other part is
+respired. The fraction of the C in the <span
+class="math inline">\(Y\)</span> pool that is transferred to the <span
+class="math inline">\(O\)</span> pool is defined by the parameter <span
+class="math inline">\(h\)</span>. The rest (<span
+class="math inline">\(1-h\)</span>) is respired. The latter flux is
+often not written, depending on the application.<br />
+The <span class="math inline">\(h\)</span> parameter is defined as
+“humification factor” and it is supposed to represent the material that
+is “humified” (or “stabilized”) in the soil. It is a bit of a
+simplification, since the material that is transferred to the <span
+class="math inline">\(O\)</span> pool is not necessarily stabilized, but
+it is a useful concept.</p>
+</div>
+<div id="the-advantages-of-minimalism-easily-solved-steady-states"
+class="section level2">
+<h2>The advantages of minimalism: easily solved steady states</h2>
+<p>No system will accumulate or lose C indefinitely. The rates will
+always tend to zero.<br />
+When the rate of SOC variation is zero, the system is in
+<strong>equilibrium</strong>, and inputs equal outputs. We will explore
+more in detail this concept in the following section, but for example a
+land use change from a relatively rich environment (a forest) to an
+environment with less C inputs (agriculture). SOC will decrease over
+time until it reaches the new equilibrium:
+<img src="ICBM_files/figure-html/unnamed-chunk-2-1.png" width="50%" />
+The steady states are, by definition, where the rate of variation <span
+class="math inline">\(\frac{dC}{dt}=0\)</span>. For a single pool model
+(Olson) this becomes easily solved. The steady state means that for a
+certain amount of C <span class="math inline">\(C_{ss}\)</span> the
+variation is zero: <span class="math inline">\(0 = I - k \cdot
+C_{ss}\)</span>, which means <span class="math inline">\(k \cdot C_{ss}
+= I\)</span> and therefore <span
+class="math inline">\(C_{ss}=\frac{I}{k}\)</span>.</p>
+<p>A slightly more complicated model, like the two pool (Y and O) ICBM,
+has still relatively simple analytical solution: <span
+class="math display">\[
+Y_{ss}=\frac{I}{k_y}\\
+O_{ss}=\epsilon\cdot\frac{I}{k_o}
+\]</span> Any linear model, with an arbitrary number of pools, has an
+analytical solution. But having it so short and easily manageable can
+sometimes be useful.</p>
+</div>
+<div id="the-disadvantages-of-minimalism-loss-in-long-term-accuracy"
+class="section level2">
+<h2>The disadvantages of minimalism: loss in long-term accuracy</h2>
+<p>More pools define a more complex curve. This results in less
+approximation, and the models become more general.<br />
+<img src="figures/1vs3pools.png" style="width:70.0%" /> For example a
+1 pool model is not going to be able to represent the long-term trends
+of the more recalcitrant soil components well, and already on a few
+decades scale it can accumulate a significant error.<br />
+When extrapolating on long time scales (several centuries or more) 3 or
+more pools are necessary (assuming we can initialize the model
+correctly).</p>
+</div>
+</div>
+<div id="what-model-category-belongs-to" class="section level1">
+<h1>What model category belongs to?</h1>
+</div>
+<div id="hands-on-implementing-icbm-as-an-ode-system"
+class="section level1">
+<h1>Hands-on: implementing ICBM as an ODE system</h1>
+<p>This is a very flexible approach for anyone who knows already some R
+basics because it allows us to build a model (any linear model, and to
+some extent also nonlinear) just by defining it as an ODE system.</p>
+<p>An ODE system is quite easy conceptually, particularly when compared
+to its analytical solution over time. This allows you to easily modify
+your models, adding or taking out terms depending on the hypotheses you
+want to represent.</p>
+<div id="icbm-as-ode" class="section level2">
+<h2>ICBM as ODE</h2>
+<p>We have seen this already but as a reminder here it is the model we
+want to implement: <span class="math display">\[
+\frac{dY_{(t)}}{dt}=I - k_y \cdot r \cdot Y \\
+\frac{dO_{(t)}}{dt}= h \cdot k_y \cdot r  \cdot Y  - k_o \cdot r  \cdot
+O
+\]</span></p>
+<p>Which can be conceptually visualized like this:
+<img src="ICBM_files/figure-html/unnamed-chunk-3-1.png" width="288" /></p>
+</div>
+<div id="loading-the-solver" class="section level2">
+<h2>Loading the solver</h2>
+<pre class="r"><code>library(deSolve)</code></pre>
+<p>This loads a pretty standard ODE solver library, which contains
+various numerical methods we are not going to dig into now.<br />
+it is enough to know that it calculates the solution with numerical
+optimization (which is not exact but an approximation, so your results
+may vary ever so slightly depending on the seeds you set in R or on the
+different executions. It is a minimal variation anyway you can
+neglect).</p>
+</div>
+<div id="setting-up-the-model-ode-to-solve" class="section level2">
+<h2>Setting up the model ODE to solve</h2>
+<pre class="r"><code>##function (differential form)
+ODEfun &lt;- function(time=seq(1:times_range), state=state, 
+                   parms=parms) {
+  with(as.list(c(state, parms)), {
+    .Y=I-ky*r*Y
+    .O=h*ky*r*Y-ko*r*O
+    return(list(c(.Y, .O)))
+  })
+}</code></pre>
+<p>The order of the results will be the one specified in the output
+(<code>return(list(..., ..., ...))</code>).</p>
+</div>
+<div id="definiting-initial-state-and-parameters"
+class="section level2">
+<h2>Definiting initial state and parameters</h2>
+<p>We need to define the initial state of the system. This is a vector
+containing one entry for each of the variables defined in the ODE, and
+the order should match.</p>
+<pre class="r"><code>init=c(Y=2, O=10)</code></pre>
+<p>We then define all our model parameters (constants)</p>
+<pre class="r"><code>parameters=c(ky=0.8, ko=0.0065, h=0.15, r=1, I=1)</code></pre>
+<p>And we specify the time vector for the solution. The time steps can
+be arbitraru big or small, not necessarily 1. The time unit is defined
+by the model (a certain parameterization will be in a specific time
+unit)</p>
+<pre class="r"><code>time_vector=seq(0,100)</code></pre>
+</div>
+<div id="running-the-ode-within-the-solver" class="section level2">
+<h2>Running the ODE within the solver</h2>
+<p>We can now run our solver to find the integrated solution over
+time:</p>
+<pre class="r"><code>simulation &lt;- ode(y = init, time = time_vector, func = ODEfun, 
+                  parms = parameters)
+total_SOC=simulation[,2]+simulation[,3]</code></pre>
+<p>We have now a data frame with three columns, the first is time and
+the others are the solutions of our ODE in the order specified in the
+model definition. We can sum up the two pools to find the total SOC</p>
+<pre class="r"><code>total_SOC=simulation[,2]+simulation[,3]</code></pre>
+</div>
+<div id="plotting-the-results" class="section level2">
+<h2>Plotting the results</h2>
+<p><img src="ICBM_files/figure-html/pressure-1.png" width="672" /></p>
+</div>
+<div id="what-if" class="section level2">
+<h2>What if?</h2>
+<p>For example, what if you wanted to modify the model adding one
+specific Y pool for roots and one for shoots?</p>
+<p><img src="ICBM_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+<p>You can then just define the model as an ODE system: <span
+class="math display">\[
+\frac{dY_{r,}}{dt}= I_r - k_y \cdot r \cdot Y \\
+\frac{dY_{s}}{dt}= I_s - k_y \cdot r \cdot Y \\
+\]</span> We then have to define these fluxes into the O pool as a sum:
+<span class="math display">\[
+\frac{dO}{dt}= h_r \cdot k_y \cdot r  \cdot Y_r + h_s \cdot k_y \cdot
+r  \cdot Y_s  - k_o \cdot r  \cdot O
+\]</span> And now we are ready to write this system into the solver, and
+then we have our model.</p>
+<p>This is just an example. We assumed, among many other things, that
+the two <code>Y</code> pools decay at the same constant rate
+<code>k_y</code>, but this is not necessarily the case, it all depends
+on the hypothesis you want to test.<br />
+You can think to virtually any hypothesis (provided it is fitting a
+compartmental linear model definition) and represent it with an ODE. And
+you can also go further (like nonlinear hypotheses) since
+<code>deSolve</code> also solves PDE systems, I would just not go there
+without knowing what you are doing in terms of the properties of the
+model object you are creating…</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
