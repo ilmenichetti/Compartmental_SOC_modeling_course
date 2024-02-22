@@ -255,6 +255,9 @@ $(document).ready(function () {
   <a href="steadystate.html">The steady state concept</a>
 </li>
 <li>
+  <a href="climate.html">Introducing climate</a>
+</li>
+<li>
   <a href="space.html">Model space and equifinality</a>
 </li>
 <li>
@@ -326,6 +329,27 @@ and it becomes identical if the decay constant of the “young” pool,
 class="math inline">\(1\)</span>: all organic material coming to the
 soil is either instantly respired or transferred to the SOM.
 <img src="ICBM_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
+<p>The flux from the <span class="math inline">\(O\)</span> pool is
+easily understood: a certain amount of the C in <span
+class="math inline">\(O\)</span> (defined by <span
+class="math inline">\(k\)</span>) is metabolized at any time step and
+released as <span class="math inline">\(CO_2\)</span>. The flux defines
+what remains in the pool, as well as what is respired.<br />
+The flux from the <span class="math inline">\(Y\)</span> pool is a bit
+more complex. It is divided into two parts: one part is transferred to
+the <span class="math inline">\(O\)</span> pool, and the other part is
+respired. The fraction of the C in the <span
+class="math inline">\(Y\)</span> pool that is transferred to the <span
+class="math inline">\(O\)</span> pool is defined by the parameter <span
+class="math inline">\(h\)</span>. The rest (<span
+class="math inline">\(1-h\)</span>) is respired. The latter flux is
+often not written, depending on the application.<br />
+The <span class="math inline">\(h\)</span> parameter is defined as
+“humification factor” and it is supposed to represent the material that
+is “humified” (or “stabilized”) in the soil. It is a bit of a
+simplification, since the material that is transferred to the <span
+class="math inline">\(O\)</span> pool is not necessarily stabilized, but
+it is a useful concept.</p>
 </div>
 <div id="the-advantages-of-minimalism-easily-solved-steady-states"
 class="section level2">
@@ -333,7 +357,8 @@ class="section level2">
 <p>No system will accumulate or lose C indefinitely. The rates will
 always tend to zero.<br />
 When the rate of SOC variation is zero, the system is in
-<strong>equilibrium</strong>, and inputs equal outputs. For example a
+<strong>equilibrium</strong>, and inputs equal outputs. We will explore
+more in detail this concept in the following section, but for example a
 land use change from a relatively rich environment (a forest) to an
 environment with less C inputs (agriculture). SOC will decrease over
 time until it reaches the new equilibrium:
@@ -347,7 +372,7 @@ C_{ss}\)</span>, which means <span class="math inline">\(k \cdot C_{ss}
 = I\)</span> and therefore <span
 class="math inline">\(C_{ss}=\frac{I}{k}\)</span>.</p>
 <p>A slightly more complicated model, like the two pool (Y and O) ICBM,
-has still relatively simple analyitcal solution: <span
+has still relatively simple analytical solution: <span
 class="math display">\[
 Y_{ss}=\frac{I}{k_y}\\
 O_{ss}=\epsilon\cdot\frac{I}{k_o}

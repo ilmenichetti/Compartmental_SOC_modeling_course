@@ -255,6 +255,9 @@ $(document).ready(function () {
   <a href="steadystate.html">The steady state concept</a>
 </li>
 <li>
+  <a href="climate.html">Introducing climate</a>
+</li>
+<li>
   <a href="space.html">Model space and equifinality</a>
 </li>
 <li>
@@ -341,8 +344,8 @@ class="section level2">
 <h2>1: Set the time derivatives to zero to find the steady state
 conditions:</h2>
 <p><span class="math display">\[
-0 = I - k_y \cdot r \cdot Y \\
-0 = h \cdot k_y \cdot r \cdot Y - k_o \cdot r \cdot O
+0 = I - k_y  \cdot Y \\
+0 = h \cdot k_y \cdot Y - k_o \cdot O
 \]</span></p>
 </div>
 <div id="solve-the-system-of-equations-for-the-steady-state-conditions"
@@ -351,7 +354,7 @@ class="section level2">
 conditions:</h2>
 <p>To solve for Y, rearrange the first equation:</p>
 <p><span class="math display">\[
-Y = \frac{I}{k_y \cdot r}
+Y = \frac{I}{k_y }
 \]</span></p>
 </div>
 <div
@@ -361,20 +364,23 @@ class="section level2">
 O:</h2>
 <p>With the value of Y found, substitute it into the second equation:
 <span class="math display">\[
-0 = h \cdot k_y \cdot r \cdot \left(\frac{I}{k_y \cdot r}\right) - k_o
-\cdot r \cdot O
+0 = h \cdot k_y  \cdot \left(\frac{I}{k_y }\right) - k_o  \cdot O
 \]</span> Simplify and solve for O:</p>
 <p><span class="math display">\[
-O = \frac{h \cdot I}{k_o \cdot r}
+O = \frac{h \cdot I}{k_o}
 \]</span></p>
 </div>
 <div id="there-the-steady-state-of-the-system-is"
 class="section level2">
 <h2>There! The steady state of the system is:</h2>
 <p><span class="math display">\[
-Y = \frac{I}{k_y \cdot r} \\
-O = \frac{h \cdot I}{k_o \cdot r}
+Y_{ss} = \frac{I}{k_y} \\
+O_{ss} = \frac{h \cdot I}{k_o }
 \]</span></p>
+<p>In order to find the total SOC of the system you just need to sum the
+two pools, $ SOC = Y_{ss} + O_{ss}$.<br />
+You can see in the last two equations that once the parameters are
+given, the steady state is defined only by the inputs.</p>
 </div>
 </div>
 

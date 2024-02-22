@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Website</a>
+      <a class="navbar-brand" href="index.html">Crash course in compartmental modeling</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -252,10 +252,19 @@ $(document).ready(function () {
   <a href="ICBM.html">The ICBM (toy?) model</a>
 </li>
 <li>
-  <a href="calibration.html">Model calibration</a>
+  <a href="steadystate.html">The steady state concept</a>
+</li>
+<li>
+  <a href="climate.html">Introducing climate</a>
 </li>
 <li>
   <a href="space.html">Model space and equifinality</a>
+</li>
+<li>
+  <a href="calibration.html">Model calibration</a>
+</li>
+<li>
+  <a href="bayes.html">Bayes</a>
 </li>
 <li>
   <a href="workshop1.html">Workshop 1: write and calibrate a simple SOC model</a>
@@ -280,17 +289,110 @@ $(document).ready(function () {
 </div>
 
 
-<p>Hello, Website!</p>
-<p>For more information about simple R Markdown websites, please read
-the documentation at <a
-href="https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html"
-class="uri">https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html</a>.</p>
-<p>Please also note that simple R Markdown sites are <em>not</em> based
-on <strong>blogdown</strong>. They are probably good for websites with
-only a few Rmd documents. For larger-scale and more sophisticated
-websites (such as blogs), you may want to use <strong>blogdown</strong>
-instead: <a href="https://github.com/rstudio/blogdown"
-class="uri">https://github.com/rstudio/blogdown</a>.</p>
+<p>“Calibrating” a model means to find the best set of parameters that
+make the model output as close as possible to the observed data.<br />
+Calibration is noting else than varying the values of model parameter
+minimizing or maximizing a certain function. For example, if we want to
+minimize the difference between the model output and the observed data,
+we can simply:<br />
+1) start from a randomly selected parameter value and produce some model
+output 2) sum the absolute value of the difference between the model
+output and the observed data 3) fiddle with the parameter values at
+random, changing them slightly, and repeat the process. If the sum of
+the differences decreases, we keep the new parameter values, otherwise
+we discard them.</p>
+<p>This is probably the simplest calibration algorithm you can think
+about. And you can picture yourself in the process, which is no
+different than having a computer doing the same for you other than the
+speed at which the process can be executed. You can definitely calibrate
+a model without a computer, just using paper and pen (it will just take
+maybe a bit long).</p>
+<div id="an-overly-crude-calibration-algorithm-for-a-linear-model"
+class="section level1">
+<h1>An overly crude calibration algorithm for a linear model</h1>
+<p>We will calibrate now the simplest model I can think of, a linear
+model without intercept:</p>
+<p><span class="math display">\[
+y = \alpha \cdot x
+\]</span> Where <span class="math inline">\(y\)</span> is the model
+output, <span class="math inline">\(x\)</span> is the input, and <span
+class="math inline">\(\alpha\)</span> is the model parameter we want to
+calibrate.</p>
+<div id="introducing-the-algorithm" class="section level2">
+<h2>Introducing the algorithm</h2>
+<p>The algorithm is a random search algorithm (which is the simplest
+approach I can think of), and will: 1) start from a randomly selected
+parameter value and produce some model output 2) sum the absolute value
+of the difference between the model output and the observed data 3)
+fiddle with the parameter values at random, changing them slightly, and
+repeat the process. If the sum of the differences decreases, we keep the
+new parameter values, otherwise we discard them.</p>
+<p>The algorithm will in this case stop after a certain number of
+iterations. This is the simplest possible approach, but usually more
+refined algorithm have a stop condition instead (most often with a
+convergence threshold: the parameter starts to change very little for
+some time, and then the calibration stops).</p>
+</div>
+<div id="generate-example-data" class="section level2">
+<h2>Generate example data</h2>
+<p>First, we generate some data to use with the example</p>
+<pre class="r"><code>set.seed(123) # For reproducibility
+x &lt;- 1:100
+y &lt;- 2 * x + rnorm(100, mean = 0, sd = 20) # True slope is 2, with some noise
+plot(x, y, main = &quot;Hypothetical Data&quot;, xlab = &quot;x&quot;, ylab = &quot;y&quot;)</code></pre>
+<p><img src="calibration_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="define-the-cost-function" class="section level2">
+<h2>Define the cost function</h2>
+<pre class="r"><code>cost_function &lt;- function(x, y, b) {
+  predictions &lt;- b * x
+  mse &lt;- mean((predictions - y)^2)
+  return(mse)
+}</code></pre>
+</div>
+<div id="initialize-the-algorithm" class="section level2">
+<h2>Initialize the algorithm</h2>
+<p>We start by initializing the parameter <span
+class="math inline">\(\alpha\)</span> (written in R code as “a”) at
+random, and set two meta-parameters to define how the algorithm will
+run: the learning rate and the number of iterations. The learning rate
+is a small number that will be multiplied by the gradient of the
+function we want to minimize, and the number of iterations is the number
+of times we will update the parameter <span
+class="math inline">\(\alpha\)</span> (or when the calibration will
+stop).</p>
+<pre class="r"><code>set.seed(123) # For reproducibility
+best_b &lt;- 0 # Initial guess
+best_cost &lt;- cost_function(x, y, best_b)
+learning_rate &lt;- 0.01 # Step size for updating b
+num_trials &lt;- 1000</code></pre>
+</div>
+<div id="perform-the-optimization-loop" class="section level2">
+<h2>Perform the optimization loop</h2>
+<pre class="r"><code>for (i in 1:num_trials) {
+  proposal_b &lt;- best_b + runif(1, -learning_rate, learning_rate) # Propose a new b within a range around the current best
+  proposal_cost &lt;- cost_function(x, y, proposal_b)
+  
+  if (proposal_cost &lt; best_cost) {
+    best_b &lt;- proposal_b
+    best_cost &lt;- proposal_cost
+  }
+}</code></pre>
+</div>
+</div>
+<div id="lets-see-how-the-model-we-just-calibrated-performs"
+class="section level1">
+<h1>Let’s see how the model we just calibrated performs!</h1>
+<pre class="r"><code>plot(x, y, main = &quot;Hypothetical Data&quot;, xlab = &quot;x&quot;, ylab = &quot;y&quot;)
+abline(a = 0, b = best_b, col = &quot;red&quot;)
+legend(&quot;topleft&quot;, legend = &quot;best model calibration we found&quot;, col = &quot;red&quot;, lty = 1)</code></pre>
+<p><img src="calibration_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div
+style="background-color: #f0e68c; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+<p>Now, can you relate what this simple algorithm with the model
+parameter space?</p>
+</div>
+</div>
 
 
 
